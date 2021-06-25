@@ -1,105 +1,152 @@
-function vowelBonusScore (word) {
-  let bonusScore=0;
-  // word = word.toUpperCase();
+  for( let i = 0; i < obj[m].length; i++ ){
+      //console.log("New array", obj[m][i]);
+     //newPointStructure[(obj[m][i]).toLowerCase()] = m;
+     newObj[(obj[m][i]).toUpperCase()] = Number(m);
+     newObj[(obj[m][i]).toLowerCase()] = Number(m);
+    }
+
+newPointStructure = transform(oldPointStructure);
+newPointStructure[' '] = 0;
+
+//console.log('newPointStructure', newPointStructure);
+//console.log('oldPointStructure', oldPointStructure);
+//console.log(transform(oldPointStructure));
+
+let scrabbleScore = function(word){
   word = word.toUpperCase();
-  for (let i=0; i<word.length; i++) {
-    if (vowels.includes (word[i]))  {
-      bonusScore=bonusScore+3;
-    } else {
-      bonusScore=bonusScore+1;
-    }
+  word = word.toLowerCase();
+  let letterPoints = 0;
+  for( let i = 0; i < word.length; i++ ){
+    //letterPoints += Number(newPointStructure[word[i]]);
+    letterPoints += newPointStructure[word[i]];
   }
-    return bonusScore;
+  return letterPoints;
 }
-let newPointStructure=transform(oldPointStructure);
-let scrabbleScore = function(word) {
-  let newScore=0;
-  word=word.toLowerCase();
-  console.log(`word = ${word}`);
-  // for (const letter in word) {
-  //  console.log(`letter = ${letter}`);
-    for (i=0; i<word.length; i++) {
-      // console.log(`letter[i] = ${letter[i]}`);
-      // console.log(`word[i] = ${word[i]}`);
-      // if (newPointStructure===word[i]) {
-        console.log("word[i] = ", word[i]);
-        console.log("newScore = ", newScore);
-        console.log("newPointStructure[word[i]] = ", newPointStructure[word[i]]);
-        newScore+=newPointStructure[word[i]];
-        // newScore=newPointStructure[letter][i];
-      // }
+function oldScrabbleScorer(word) {
+  word = word.toUpperCase();
+	let letterPoints = 0;
+ 
+	for (let i = 0; i < word.length; i++) {
+ 
+	  for (const pointValue in oldPointStructure) {
+ 
+		 if ( oldPointStructure[pointValue].includes(word[i]) ) {
+			 //letterPoints += `Points for '${word[i]}': ${pointValue}\n`
+       pointValueconv = Number( pointValue );
+       letterPoints += pointValueconv;
+		  }
+ 
+	  }
+	}
+	return letterPoints;
+ }
+  let simpleScore = function (word){
+   //word = word.toUpperCase();
+   let pointValue = 1;
+   let letterPoints = 0;
+   
+   for( let i = 0; i < word.length; i++){
+     //letterPoints += `Points for '${word[i]}': ${pointValue}\n`
+     letterPoints += pointValue;
     }
-  // }  
-  console.log("type of " + typeof newScore);
-  return newScore
-}
-const oldScrab = {
-  name:  'Scrabble',
-  description: 'The traditional scoring algorithm.',
-  scoringFunction: scrabbleScore
-}
-const simpleSc = {
-  name:  'Simple Score',
-  description: 'Each letter is worth 1 point',
-  scoringFunction: simpleScore
-}
-const vBonus = {
-  name:  'Bonus Vowels',
-  description:  'A function that returns a score based on the number of vowels and consonants.',
-  scoringFunction:  vowelBonusScore
-}
-const scoringAlgorithms = [simpleSc, vBonus, oldScrab];
-function scorerPrompt() {
-  // let select=input.question('Which scoring algorithm would you like to use? \n0 - Simple: One point per character \n1 - Vowel Bonus: Vowels are worth 3 points \n2 - Scrabble: Uses scrabble point system\nEnter 0, 1, or 2: ');
-  let select=input.question(`Which scoring algorithm would you like to use? \n0 - ${scoringAlgorithms[0].name}: ${scoringAlgorithms[0].description} \n1 - ${scoringAlgorithms[1].name}: ${scoringAlgorithms[1].description} \n2 - ${scoringAlgorithms[2].name}: ${scoringAlgorithms[2].description}\nEnter 0, 1 or 2: `);
-  
-  //(`Which scoring algorithm would you like to see? \n ${simpleSc[name] `)
-  
-  return select;
-}
-function transform (oldPointStructure) {
-  let newPoint={};
-  for (let letter in oldPointStructure) {
-    // console.log(`letter = ${letter}`);
-    let letterArray = oldPointStructure[letter];
-    //.console.log(`letterArray = ${letterArray}`);  
-    for (i=0; i<letterArray.length; i++) {
-      // newPoint[letterArray]=letter
-    //  console.log(letterArray[i].toLowerCase() + ": " + letter);
-    //  console.log(letterArray[i].toLowerCase());
-      // newPoint=letterArray[i].toLowerCase();
-      letter=Number(letter);
-      newPoint[letterArray[i].toLowerCase()] = letter;
+    return letterPoints;
+ }
+  let vowelBonusScore = function (word){
+   word = word.toUpperCase();
+   let pointValue = 0;
+   let letterPoints = 0;
+   let vowel =['A', 'E', 'I', 'O', 'U'];
+   
+   for( let i = 0; i < word.length; i++){
+      if( vowel.includes(word[i])){
+        pointValue = 3;
+      } else {
+        pointValue = 1;
+      }
+     // letterPoints += `Points for '${word[i]}': ${pointValue}\n`
+      letterPoints += pointValue;
     }
+    return letterPoints;
+}
+// your job is to finish writing these functions and variables that we've named //
+// don't change the names or your program won't work as expected. //
+function initialPrompt() {
+  console.log("Let's play some scrabble! \n");
+  let word = input.question("Enter a word to score: ");
     
-    console.log(`letter = ${typeof letter}`);
-    // obj[letter]=letter
+  //let letters = "";
+  let letters = /^[A-Za-z ]*$/;
+  if(!letters.test(word)){
+    console.log("Please enter a word not a number or symbol");
+    return -1;
   }
-  // for (i=0; i<obj.length; i++) {
-  //   console.log(obj[i]);
-  // }
-  console.log("newPointStructure: ")
-  console.log(newPoint)
-      return newPoint; 
-}
-// let newPointStructure=transform(oldPointStructure);
+  return word;
+ 
+ /*console.log(oldScrabbleScorer(scrabbleScore));
+  let simpleScore = input.question("Enter a word to score");
+  console.log(simpleScorer(simpleScore));
+  let vowelBonusScore = input.question("Enter a word to score");
+  console.log(vowelBonusScorer(vowelBonusScore));*/
+};
+//let simpleScore;
+//let vowelBonusScore;
+//let scrabbleScore;
+let object1 =
+{
+  name: "Simple Score",
+  description: "Each letter is worth 1 point",
+  scoringFunction: 
+  simpleScore
+ }
+ let object2 =
+ {
+  name: "Bonus Vowels",
+  description: "Vowels are 3 pts, consonants are 1 pt",
+  scoringFunction: 
+  vowelBonusScore
+ }
+ let object3 =
+ {
+  name: "Scrabble",
+  description: "The traditional scoring algorithm",
+ // scorerFunction: function(word){ return oldScrabbleScorer(word)}
+  scoringFunction: 
+  scrabbleScore
   
-// console.log(newPointStructure);
+ }
+const scoringAlgorithms = [ object1, object2, object3 ];
+/*console.log("algorithm name: ", scoringAlgorithms[0].name);
+console.log("scorerFunction result:", scoringAlgorithms[0].scorerFunction("JavaScript"));*/
+function scorerPrompt() {
+  let scoringAlgorithm = input.question( `Which Scoring Algorithm would you like to use ?
+  0 - Simple: One point per character
+  1 - Vowel Bonus: Vowels are worth 3 points
+  2 - Scrabble: Uses scrabble point system
+  Enter 0, 1, or 2 : `);
+  const validOptions = ['0','1','2'];
+  if(!validOptions.includes(scoringAlgorithm)){
+    console.log("Please enter only 0 1 and 2");
+    return -1;
+  }
+  //console.log(scoringAlgorithm);
+  return scoringAlgorithm;
+} 
+//function transform() {};
+//let newPointStructure;
 function runProgram() {
-  let response = initialPrompt();
-  //let finalWord=newPoint;
-        //  let lowCase = 
-   let method=scorerPrompt();
-    if (method==='0') {
-      let simple=simpleScore(response);
-      console.log(`Score for ${response}: ${simple}`)
-    } else if (method==='1') {
-      let vbs=vowelBonusScore(response);
-      console.log(`Score for ${response}: ${vbs}`)
-    } else if (method==='2') {
-      let oldScr=scrabbleScore (response);
-      console.log(`Score for ${response}: ${oldScr}`)
-    }
+  //let newWord = initialPrompt();
+  let newWord = -1;
+  while ( newWord === -1 ){
+    newWord = initialPrompt();
+  }
+  let score = -1;
+  while( score === -1 ){
+    score =  scorerPrompt();
+  }
+  //console.log(newWord);
+  //console.log(score);
+  console.log(`Score for ${newWord} : ${scoringAlgorithms[score].scoringFunction(newWord)}`);
+   
 }
 // Don't write any code below this line //
 // And don't change these or your program will not run as expected //
