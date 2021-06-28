@@ -1,153 +1,145 @@
-  for( let i = 0; i < obj[m].length; i++ ){
-      //console.log("New array", obj[m][i]);
-     //newPointStructure[(obj[m][i]).toLowerCase()] = m;
-     newObj[(obj[m][i]).toUpperCase()] = Number(m);
-     newObj[(obj[m][i]).toLowerCase()] = Number(m);
-    }
+// inspired by https://exercism.io/tracks/javascript/exercises/etl/solutions/91f99a3cca9548cebe5975d7ebca6a85
 
-newPointStructure = transform(oldPointStructure);
-newPointStructure[' '] = 0;
+const input = require("readline-sync");
+let userWord = '';
 
-//console.log('newPointStructure', newPointStructure);
-//console.log('oldPointStructure', oldPointStructure);
-//console.log(transform(oldPointStructure));
+function initialPrompt() {
+  userWord = String(input.question("Let's play some scrabble! Enter a word: "));
+};
 
-let scrabbleScore = function(word){
-  word = word.toUpperCase();
-  word = word.toLowerCase();
-  let letterPoints = 0;
-  for( let i = 0; i < word.length; i++ ){
-    //letterPoints += Number(newPointStructure[word[i]]);
-    letterPoints += newPointStructure[word[i]];
-  }
-  return letterPoints;
-}
+const oldPointStructure = {
+  1: ['A', 'E', 'I', 'O', 'U', 'L', 'N', 'R', 'S', 'T'],
+  2: ['D', 'G'],
+  3: ['B', 'C', 'M', 'P'],
+  4: ['F', 'H', 'V', 'W', 'Y'],
+  5: ['K'],
+  8: ['J', 'X'],
+  10: ['Q', 'Z']
+};
+
 function oldScrabbleScorer(word) {
-  word = word.toUpperCase();
-	let letterPoints = 0;
+	word = word.toUpperCase();
+	let letterPoints = "";
  
 	for (let i = 0; i < word.length; i++) {
  
 	  for (const pointValue in oldPointStructure) {
  
-		 if ( oldPointStructure[pointValue].includes(word[i]) ) {
-			 //letterPoints += `Points for '${word[i]}': ${pointValue}\n`
-       pointValueconv = Number( pointValue );
-       letterPoints += pointValueconv;
-		  }
+		 if (oldPointStructure[pointValue].includes(word[i])) {
+			letterPoints += `Points for '${word[i]}': ${pointValue}\n`
+		 }
  
 	  }
 	}
 	return letterPoints;
  }
-  let simpleScore = function (word){
-   //word = word.toUpperCase();
-   let pointValue = 1;
-   let letterPoints = 0;
-   
-   for( let i = 0; i < word.length; i++){
-     //letterPoints += `Points for '${word[i]}': ${pointValue}\n`
-     letterPoints += pointValue;
-    }
-    return letterPoints;
- }
-  let vowelBonusScore = function (word){
-   word = word.toUpperCase();
-   let pointValue = 0;
-   let letterPoints = 0;
-   let vowel =['A', 'E', 'I', 'O', 'U'];
-   
-   for( let i = 0; i < word.length; i++){
-      if( vowel.includes(word[i])){
-        pointValue = 3;
-      } else {
-        pointValue = 1;
-      }
-     // letterPoints += `Points for '${word[i]}': ${pointValue}\n`
-      letterPoints += pointValue;
-    }
-    return letterPoints;
-}
+
 // your job is to finish writing these functions and variables that we've named //
 // don't change the names or your program won't work as expected. //
-function initialPrompt() {
-  console.log("Let's play some scrabble! \n");
-  let word = input.question("Enter a word to score: ");
-    
-  //let letters = "";
-  let letters = /^[A-Za-z ]*$/;
-  if(!letters.test(word)){
-    console.log("Please enter a word not a number or symbol");
-    return -1;
+
+
+function simpleScore(word) {
+  word = userWord.toUpperCase();
+  let simpleScore=0;
+  for (let i = 0; i < word.length; i++) {
+    simpleScore +=1  
   }
-  return word;
- 
- /*console.log(oldScrabbleScorer(scrabbleScore));
-  let simpleScore = input.question("Enter a word to score");
-  console.log(simpleScorer(simpleScore));
-  let vowelBonusScore = input.question("Enter a word to score");
-  console.log(vowelBonusScorer(vowelBonusScore));*/
-};
-//let simpleScore;
-//let vowelBonusScore;
-//let scrabbleScore;
-let object1 =
-{
-  name: "Simple Score",
-  description: "Each letter is worth 1 point",
-  scoringFunction: 
-  simpleScore
- }
- let object2 =
- {
-  name: "Bonus Vowels",
-  description: "Vowels are 3 pts, consonants are 1 pt",
-  scoringFunction: 
-  vowelBonusScore
- }
- let object3 =
- {
-  name: "Scrabble",
-  description: "The traditional scoring algorithm",
- // scorerFunction: function(word){ return oldScrabbleScorer(word)}
-  scoringFunction: 
-  scrabbleScore
-  
- }
-const scoringAlgorithms = [ object1, object2, object3 ];
-/*console.log("algorithm name: ", scoringAlgorithms[0].name);
-console.log("scorerFunction result:", scoringAlgorithms[0].scorerFunction("JavaScript"));*/
-function scorerPrompt() {
-  let scoringAlgorithm = input.question( `Which Scoring Algorithm would you like to use ?
-  0 - Simple: One point per character
-  1 - Vowel Bonus: Vowels are worth 3 points
-  2 - Scrabble: Uses scrabble point system
-  Enter 0, 1, or 2 : `);
-  const validOptions = ['0','1','2'];
-  if(!validOptions.includes(scoringAlgorithm)){
-    console.log("Please enter only 0 1 and 2");
-    return -1;
-  }
-  //console.log(scoringAlgorithm);
-  return scoringAlgorithm;
-} 
-//function transform() {};
-//let newPointStructure;
-function runProgram() {
-  //let newWord = initialPrompt();
-  let newWord = -1;
-  while ( newWord === -1 ){
-    newWord = initialPrompt();
-  }
-  let score = -1;
-  while( score === -1 ){
-    score =  scorerPrompt();
-  }
-  //console.log(newWord);
-  //console.log(score);
-  console.log(`Score for ${newWord} : ${scoringAlgorithms[score].scoringFunction(newWord)}`);
-   
+  return "Points: ", simpleScore;
 }
+
+function vowelBonusScore(word) {
+  word = userWord.toUpperCase();
+  let vowelBonusScore = 0;
+  for (let i = 0; i < word.length; i++) {
+    if (word[i] === 'A' ||
+       word[i] === 'E' ||
+       word[i] === 'I' ||
+       word[i] === 'O' ||
+       word[i] === 'U') {
+        vowelBonusScore += 3;
+    } else {
+      vowelBonusScore += 1;
+    }
+  }
+  return vowelBonusScore;
+}
+
+function transform(object) {
+  let newO = {}
+  object = oldPointStructure
+  for (key in object){
+    for (let i = 0; i < object[key].length; i++) {
+      newO[object[key][i].toLowerCase()]=Number([key]);  
+  }
+}
+return newO
+};
+
+let newPointStructure = transform(oldPointStructure);
+
+function scrabbleScore(word) {
+	let scrabbleScore = 0;
+  word = userWord.toLowerCase();
+  //console.log('New Point Structure: ',newPointStructure)
+	for (let i = 0; i < word.length; i++) {
+      if (word[i] in newPointStructure) {
+      scrabbleScore += Number(newPointStructure[word[i]]);
+      }
+		}
+	return (scrabbleScore*1);
+ }
+
+
+const scoringAlgorithms = [
+  simpleScorer = {
+    name: "Simple Score",
+    description: "Each letter is worth 1 point.",
+    scoringFunction: simpleScore
+  }, 
+  vowelBonusScorer = {
+    name: "Bonus Vowels",
+    description: "Vowels are 3 pts, consonants are 1 pt.",
+    scoringFunction: vowelBonusScore
+  }, 
+  scrabbleScorer = {
+    name: "Traditional Scrabble",
+    description: "The traditional scoring algorithm.",
+    scoringFunction: scrabbleScore
+  }
+  ];
+
+function scorerPrompt() {
+  let scoreOption = Number(input.question("Select a scoring option:\n\n0 = Score is equal to the number of letters in the word. \n1 = Vowels = 3pts, Consonants = 1pt. \n2 = Traditional Scrabble scoring.\nEnter 0, 1, or 2: "))
+
+// A) If the user enters 0, have the program output a score using the simple scorer.
+
+  if (scoreOption === 0) {
+    scoreOption = 
+    console.log("Simple Scoring Points: ", scoringAlgorithms[0].scoringFunction());
+
+  }
+// B) If the user enters 1, use the vowel bonus scoring function.
+
+  else if (scoreOption === 1) {
+    scoreOption = 
+    console.log("Bonus Vowel Scoring Points: ", scoringAlgorithms[1].scoringFunction());
+}
+// C) If the user enters 2, use the Scrabble scoring option.
+
+  else {
+    scoreOption = 
+    console.log("Scrabble Scoring Points: ", scoringAlgorithms[2].scoringFunction());
+}
+// D) scorerPrompt() should return the object the user has selected.
+  return scoreOption
+}
+
+
+function runProgram() {
+   initialPrompt();
+   scorerPrompt();
+}
+
 // Don't write any code below this line //
 // And don't change these or your program will not run as expected //
 module.exports = {
@@ -162,3 +154,4 @@ module.exports = {
 	runProgram: runProgram,
 	scorerPrompt: scorerPrompt
 };
+
